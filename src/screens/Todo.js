@@ -1,5 +1,5 @@
 import React ,{ Component } from 'react'
-import { View,Text,StyleSheet,Button,ScrollView} from 'react-native'
+import { View,Text,StyleSheet,Button,ScrollView,Switch} from 'react-native'
 
 
 let id = 0
@@ -16,9 +16,9 @@ const styles = StyleSheet.create({
     },
     todoContianer: {
         flexDirection: 'row',
-        padding: 10,
+        padding: 15,
         alignItems: 'center',
-        backgroundColor: 'orange'
+        backgroundColor: 'yellow'
     }
 })
 
@@ -27,7 +27,7 @@ class Todo extends Component {
 
 
     state={
-        todos: []
+        todos: [],
     }
 
     addTodo = () => {
@@ -38,11 +38,24 @@ class Todo extends Component {
                 ...this.state.todos,
                 {
                     id: id,
-                    text: text
+                    text: text,
+                    checked: false
                 }
             ]
+        }) 
+    }
+
+    removeTodo = id => {
+        this.setState({
+            todos: this.state.todos.filter(todo => todo.id !== id)
         })
     }
+
+    toggleTodo = id => {
+        alert("Sorry todo isn't completed")
+    }
+
+
  
     render(){
         return(
@@ -55,6 +68,13 @@ class Todo extends Component {
                     this.state.todos.map(todo => (
                         <TodoItem 
                         todo={todo}
+                        onDelete = {
+                            () => this.removeTodo(todo.id)
+                        }
+                        onToggle={
+                            () => this.toggleTodo(todo.id)
+                        }
+                        
                         />
                     ))
                 }
@@ -66,10 +86,12 @@ class Todo extends Component {
 
 }  
 
-const TodoItem = props => (
+const TodoItem = ({todo,onDelete,onToggle}) => (
     <View style={styles.todoContianer}>
-        <Button title={'Delete'} color={'red'}/>
-        <Text>{props.todo.text}</Text>
+       
+        <Button title={'Delete'} color={'red'} onPress={onDelete}/>
+        <Text>{todo.text}</Text>
+        <Switch value={todo.checked} onValueChange={onToggle}/>
     </View>
 )
 
