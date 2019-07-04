@@ -1,27 +1,9 @@
 import React ,{ Component } from 'react'
 import { View,Text,StyleSheet,Button,ScrollView,Switch} from 'react-native'
-
+import { styles } from './todoStyles'
+import { TodoItem} from '../../components/TodoItem'
 
 let id = 0
-
-const styles = StyleSheet.create({
-    appContainer: {
-        flex: 1,
-        padding: 20
-    },
-    appTitle: {
-        fontSize: 22,
-        color: 'black',
-        alignSelf: 'center'
-    },
-    todoContianer: {
-        flexDirection: 'row',
-        padding: 15,
-        alignItems: 'center',
-        backgroundColor: 'yellow'
-    }
-})
-
 
 class Todo extends Component {
 
@@ -52,14 +34,27 @@ class Todo extends Component {
     }
 
     toggleTodo = id => {
-        alert("Sorry todo isn't completed")
+        this.setState({
+            todos: this.state.todos.map(todo => (
+                todo.id !== id ? todo :
+                {
+                    id: todo.id,
+                    text: todo.text,
+                    checked: !todo.checked
+                }
+            ))
+        })
     }
+
 
 
  
     render(){
         return(
             <View style={styles.appContainer}>
+
+                <Text style={{fontSize: 20}}>Total todos:  {this.state.todos.length}</Text>
+                <Text style={{fontSize: 20}}>Complete todos: {this.state.todos.filter(todo => todo.checked).length}</Text>
                 <Text style={styles.appTitle}>TodoApp</Text>
                 <Button title={'Add Todo'} onPress={() => {this.addTodo()}} />
             
@@ -86,13 +81,5 @@ class Todo extends Component {
 
 }  
 
-const TodoItem = ({todo,onDelete,onToggle}) => (
-    <View style={styles.todoContianer}>
-       
-        <Button title={'Delete'} color={'red'} onPress={onDelete}/>
-        <Text>{todo.text}</Text>
-        <Switch value={todo.checked} onValueChange={onToggle}/>
-    </View>
-)
 
 export default Todo
